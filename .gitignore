@@ -1,0 +1,26 @@
+# environments
+# leaving these in for demo purposes
+# /config/environments
+# .env
+
+# dependencies
+/node_modules
+
+# IDE
+/.idea
+/.awcache
+/.vscode
+
+# misc
+npm-debug.log
+
+# example
+/quick-start
+
+# tests
+/test
+/coverage
+/.nyc_output
+
+# dist
+/dist

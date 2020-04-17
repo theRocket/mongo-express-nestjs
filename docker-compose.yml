@@ -1,0 +1,66 @@
+version: "3.7"
+
+services:
+  db-mongo:
+    container_name: nscc_mongodb
+    env_file: ./config/environments/local.env # CHANGE MANUALLY BY ENV?
+    environment: 
+      - MONGO_INITDB_DATABASE=${DB_NAME}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      # the right hand side are loaded from .env
+    image: mongo:${DB_VERSION}
+    restart: always
+    networks:
+      - netty
+    ports:
+      - "27017:27017"
+    volumes:
+    # Can't do this on Docker for Mac - see Caveats: Where to Store Data [https://hub.docker.com/_/mongo]
+    #- ./mongo/data:/data/db #Helps to store MongoDB data in `./mongo/data`    
+    # copies over the seed data into mongo container to initialize users and database
+     - ./docker-entrypoint-initdb.d/seed.js:/docker-entrypoint-initdb.d/seed.js:ro
+
+  db-mongo-admin:
+    container_name: nscc_mongoadmin
+    image: mongo-express
+    environment: 
+      - ME_CONFIG_MONGODB_SERVER=db-mongo
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - ME_CONFIG_BASICAUTH_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - ME_CONFIG_BASICAUTH_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - "8081:8081"
+    networks:
+      - netty
+    depends_on: 
+      - db-mongo
+
+  main:
+  # image is provided by docker build of local app using Dockerfile
+    container_name: nscc_nest
+    restart: always
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/dist
+      - /usr/src/app/node_modules
+    ports:
+      - 3400:3000 # DON'T CONFLICT WITH MAIN PROTEUS APP LOCALLY
+      - 9229:9229 # FOR DEBUG
+    command: npm run start:debug
+    env_file: ./config/environments/local.env # CHANGE MANUALLY BY ENV?
+    networks:
+      - netty
+    depends_on:
+      - db-mongo
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  netty:
