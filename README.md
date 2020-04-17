@@ -13,9 +13,12 @@ See [Adding Docker with multi-stage build](https://blog.logrocket.com/containeri
 
 ```bash
 $ docker-compose --project-name cats up --build --renew-anon-volumes --detach
-or
+(or)
 $ docker-compose -p cats up --build -V -d
+
+$ docker-compose -p cats down
 ```
+Once you rename the project directory to the app you want to build, you can drop the project flag for 'cats' in the example above. It just names the network to be consistent with the container names from docker-compose.yml.
 
 ## Running the Nest app locally (not in a container)
 

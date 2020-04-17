@@ -14,9 +14,9 @@ db.createUser(
   }
 )
 //ensure a fresh start
-db.templates.drop();
+db.adoptions.drop();
 db.createCollection('adoptions')
-db.templates.insertMany([
+db.adoptions.insertMany([
   {
     name: 'Beast',
     breed: 'Maine Coon',
