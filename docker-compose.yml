@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   db-mongo:
-    container_name: nscc_mongodb
+    container_name: cats_mongodb
     env_file: ./config/environments/local.env # CHANGE MANUALLY BY ENV?
     environment: 
       - MONGO_INITDB_DATABASE=${DB_NAME}
@@ -22,7 +22,7 @@ services:
      - ./docker-entrypoint-initdb.d/seed.js:/docker-entrypoint-initdb.d/seed.js:ro
 
   db-mongo-admin:
-    container_name: nscc_mongoadmin
+    container_name: cats_mongoadmin
     image: mongo-express
     environment: 
       - ME_CONFIG_MONGODB_SERVER=db-mongo
@@ -39,7 +39,7 @@ services:
 
   main:
   # image is provided by docker build of local app using Dockerfile
-    container_name: nscc_nest
+    container_name: cats_nest
     restart: always
     build:
       context: .
