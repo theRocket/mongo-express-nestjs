@@ -11,7 +11,7 @@ RUN yarn --dev install
 
 COPY . .
 
-# RUN yarn build
+RUN yarn build
 
 # seperate build for production
 FROM node:12.13-alpine as production

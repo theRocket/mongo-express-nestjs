@@ -12,7 +12,9 @@
 See [Adding Docker with multi-stage build](https://blog.logrocket.com/containerized-development-nestjs-docker/)
 
 ```bash
-$ docker-compose up --build --renew-anon-volumes --detach -p cats
+$ docker-compose --project-name cats up --build --renew-anon-volumes --detach
+or
+$ docker-compose -p cats up --build -V -d
 ```
 
 ## Running the Nest app locally (not in a container)
